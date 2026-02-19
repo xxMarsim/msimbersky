@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MAREK ŠIMBERSKÝ — Stunt Performer & Actor</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --fire:#FF4500; --ember:#FF6B35; --gold:#FFB347; --dark:#0A0A0A; --smoke:#1A1A1A; --steel:#2A2A2E; --light:#F0E6D3; }
+  *{margin:0;padding:0;box-sizing:border-box} html{scroll-behavior:smooth}
+  body{font-family:'Barlow Condensed',sans-serif;background:var(--dark);color:var(--light);overflow-x:hidden}
+
+  .fixed-bg{position:fixed;top:0;left:0;right:0;bottom:0;z-index:-2;background:url('bg-stunt.jpg') center/cover no-repeat;filter:blur(2px) saturate(1.2)}
+  .fixed-bg-overlay{position:fixed;top:0;left:0;right:0;bottom:0;z-index:-1;background:rgba(10,10,10,0.78)}
+
+  /* LANG */
+  [data-lang-cs]{display:none!important}[data-lang-en]{display:inline!important}
+  body.lang-cs [data-lang-cs]{display:inline!important}body.lang-cs [data-lang-en]{display:none!important}
+  .bl[data-lang-en]{display:block!important}.bl[data-lang-cs]{display:none!important}
+  body.lang-cs .bl[data-lang-cs]{display:block!important}body.lang-cs .bl[data-lang-en]{display:none!important}
+
+  .lang-switcher{display:flex;border:1px solid rgba(255,69,0,0.3);border-radius:4px;overflow:hidden;margin-left:1.5rem}
+  .lang-btn{background:transparent;border:none;color:#888;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:0.8rem;letter-spacing:0.1em;padding:0.35rem 0.7rem;cursor:pointer;transition:all 0.3s}
+  .lang-btn.active{background:var(--fire);color:#fff}.lang-btn:hover:not(.active){color:var(--gold)}
+  .lang-divider{width:1px;height:20px;background:rgba(255,69,0,0.3)}
+
+  /* NAV */
+  nav{position:fixed;top:0;width:100%;z-index:100;padding:1.2rem 3rem;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(180deg,rgba(10,10,10,0.95) 0%,transparent 100%);backdrop-filter:blur(5px)}
+  .nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--fire);letter-spacing:0.1em;cursor:pointer}
+  .nav-right{display:flex;align-items:center}
+  .nav-links{display:flex;gap:2.5rem;list-style:none}
+  .nav-links a{color:var(--light);text-decoration:none;font-weight:600;font-size:0.95rem;letter-spacing:0.15em;text-transform:uppercase;transition:color 0.3s;position:relative;cursor:pointer}
+  .nav-links a:hover{color:var(--fire)}
+  .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:var(--fire);transition:width 0.3s}
+  .nav-links a:hover::after{width:100%}
+
+  .nav-admin{background:transparent;color:#666;border:1px solid rgba(255,69,0,0.2);font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;padding:0.4rem 1rem;border-radius:4px;cursor:pointer;transition:all 0.3s;margin-left:1.5rem}
+  .nav-admin:hover{border-color:var(--fire);color:var(--fire)}
+  .nav-admin.active{background:var(--fire);color:#fff;border-color:var(--fire)}
+
+  /* HAMBURGER */
+  .hamburger{display:none;background:none;border:none;cursor:pointer;width:32px;height:24px;position:relative;z-index:200;margin-left:1rem}
+  .hamburger span{display:block;position:absolute;height:2px;width:100%;background:var(--light);border-radius:2px;transition:all 0.3s ease}
+  .hamburger span:nth-child(1){top:0}.hamburger span:nth-child(2){top:10px}.hamburger span:nth-child(3){top:20px}
+  .hamburger.open span:nth-child(1){top:10px;transform:rotate(45deg)}.hamburger.open span:nth-child(2){opacity:0}.hamburger.open span:nth-child(3){top:10px;transform:rotate(-45deg)}
+  .mobile-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(10,10,10,0.97);z-index:150;flex-direction:column;align-items:center;justify-content:center;gap:2rem}
+  .mobile-overlay.open{display:flex}
+  .mobile-overlay a{color:var(--light);text-decoration:none;font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:0.15em;transition:color 0.3s;cursor:pointer}
+  .mobile-overlay a:hover{color:var(--fire)}
+
+  /* HERO */
+  .hero{position:relative;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;background:linear-gradient(180deg,rgba(10,10,10,0.6) 0%,rgba(26,10,0,0.4) 50%,rgba(10,10,10,0.6) 100%)}
+  .hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 30% 50%,rgba(255,69,0,0.15) 0%,transparent 60%),radial-gradient(ellipse at 70% 40%,rgba(255,107,53,0.1) 0%,transparent 50%);animation:fireGlow 4s ease-in-out infinite alternate}
+  @keyframes fireGlow{0%{opacity:0.6}100%{opacity:1}}
+  .hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(3.5rem,11vw,9rem);letter-spacing:0.05em;text-align:center;position:relative;z-index:2;background:linear-gradient(180deg,#fff 0%,var(--gold) 50%,var(--fire) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:titleReveal 1.5s ease-out;line-height:0.9}
+  .hero-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.5rem,4vw,2.8rem);letter-spacing:0.25em;text-align:center;color:var(--light);z-index:2;margin-bottom:0.5rem;animation:subtitleReveal 1.5s ease-out 0.2s both;opacity:0.9}
+  @keyframes titleReveal{0%{transform:translateY(60px) scale(0.9);opacity:0;filter:blur(10px)}100%{transform:translateY(0) scale(1);opacity:1;filter:blur(0)}}
+  .hero-subtitle{font-weight:300;font-size:clamp(0.9rem,2.5vw,1.5rem);letter-spacing:0.4em;text-transform:uppercase;color:var(--ember);margin-top:1rem;z-index:2;animation:subtitleReveal 1.5s ease-out 0.4s both}
+  @keyframes subtitleReveal{0%{transform:translateY(30px);opacity:0}100%{transform:translateY(0);opacity:1}}
+  .hero-badges{display:flex;gap:1.5rem;margin-top:1.5rem;z-index:2;animation:subtitleReveal 1.5s ease-out 0.7s both;flex-wrap:wrap;justify-content:center}
+  .hero-badge{padding:0.4rem 1.2rem;border:1px solid rgba(255,69,0,0.4);border-radius:3px;font-size:0.8rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);font-weight:600;background:rgba(255,69,0,0.08)}
+  .scroll-hint{position:absolute;bottom:2rem;z-index:2;animation:bounce 2s infinite;color:var(--gold);font-size:0.9rem;letter-spacing:0.2em;text-transform:uppercase}
+  .scroll-hint::after{content:'▼';display:block;text-align:center;margin-top:0.3rem;font-size:1.2rem}
+  @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(10px)}}
+  .sparks{position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:1}
+  .spark{position:absolute;width:3px;height:3px;background:var(--gold);border-radius:50%;animation:sparkFloat linear infinite;box-shadow:0 0 6px var(--ember)}
+  @keyframes sparkFloat{0%{transform:translateY(100vh) scale(0);opacity:0}10%{opacity:1;scale:1}90%{opacity:0.5}100%{transform:translateY(-10vh) scale(0);opacity:0}}
+
+  /* SECTIONS */
+  section{padding:6rem 3rem;max-width:1200px;margin:0 auto}
+  .section-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,4.5rem);color:var(--fire);margin-bottom:1rem;position:relative;display:inline-block}
+  .section-title::after{content:'';display:block;width:60px;height:3px;background:var(--gold);margin-top:0.5rem}
+
+  /* ABOUT */
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;margin-top:2rem;align-items:start}
+  .about-text{font-size:1.15rem;line-height:1.8;font-weight:300;color:#ccc}
+  .about-text strong{color:var(--gold);font-weight:600}
+  .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+  .stat-card{background:var(--smoke);border:1px solid rgba(255,69,0,0.2);border-radius:4px;padding:2rem 1.5rem;text-align:center;transition:border-color 0.3s,transform 0.3s}
+  .stat-card:hover{border-color:var(--fire);transform:translateY(-4px)}
+  .stat-number{font-family:'Bebas Neue',sans-serif;font-size:3rem;color:var(--fire);line-height:1}
+  .stat-label{font-size:0.85rem;letter-spacing:0.15em;text-transform:uppercase;color:#888;margin-top:0.5rem}
+
+  /* FILMOGRAPHY */
+  .filmography-section{background:linear-gradient(180deg,rgba(10,10,10,0.85) 0%,rgba(13,5,0,0.9) 50%,rgba(10,10,10,0.85) 100%);max-width:100%;padding:6rem 3rem}
+  .filmography-section .inner{max-width:1200px;margin:0 auto}
+  .film-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;margin-top:2rem}
+  .film-card{background:var(--smoke);border:1px solid rgba(255,69,0,0.1);border-radius:4px;padding:1.2rem 1.5rem;transition:border-color 0.3s,transform 0.3s,box-shadow 0.3s;display:flex;justify-content:space-between;align-items:center;position:relative;overflow:hidden}
+  .film-card::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background-size:cover;background-position:center;opacity:0;transition:opacity 0.4s;z-index:0}
+  .film-card::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(90deg,rgba(10,10,10,0.92) 0%,rgba(10,10,10,0.7) 50%,rgba(10,10,10,0.4) 100%);opacity:0;transition:opacity 0.4s;z-index:1}
+  .film-card.has-photo:hover::before{opacity:1}
+  .film-card.has-photo:hover::after{opacity:1}
+  .film-card.has-photo:hover{border-color:var(--fire);transform:translateY(-2px);box-shadow:0 8px 30px rgba(255,69,0,0.15)}
+  .film-card .film-info,.film-card .film-year{position:relative;z-index:2}
+  .film-card:hover{border-color:var(--fire);transform:translateY(-2px)}
+  .film-card .film-info h3{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--light);letter-spacing:0.03em}
+  .film-card .film-info .film-role{font-size:0.8rem;color:#888;letter-spacing:0.1em;text-transform:uppercase;margin-top:0.15rem}
+  .film-year{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--fire);opacity:0.6;line-height:1}
+  .film-highlight .film-info h3{color:var(--gold)}
+  .film-highlight{border-color:rgba(255,179,71,0.3);background:rgba(255,69,0,0.05)}
+  .film-highlight .film-year{opacity:1}
+  .film-category-label{font-weight:600;font-size:1rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--ember);margin-top:2.5rem;margin-bottom:0.5rem;padding-bottom:0.3rem;border-bottom:1px solid rgba(255,69,0,0.2)}
+
+  /* SHOWREEL + GALLERY */
+  .showreel-video{max-width:900px;margin:2rem auto 1rem;border-radius:8px;overflow:hidden;border:2px solid var(--fire);box-shadow:0 0 50px rgba(255,69,0,0.25)}
+  .showreel-video-inner{position:relative;padding-bottom:56.25%;height:0;overflow:hidden}
+  .showreel-video-inner iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
+
+  .gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1rem;margin-top:2rem}
+  .gallery-item{position:relative;border-radius:6px;overflow:hidden;border:1px solid rgba(255,69,0,0.15);aspect-ratio:16/10;background:var(--smoke);cursor:pointer;transition:transform 0.3s,border-color 0.3s}
+  .gallery-item:hover{transform:scale(1.03);border-color:var(--fire)}
+  .gallery-item img{width:100%;height:100%;object-fit:cover}
+  .gallery-item.video-thumb{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--steel),var(--dark))}
+  .gallery-item.video-thumb::after{content:'▶';position:absolute;width:50px;height:50px;background:rgba(255,69,0,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.2rem;padding-left:3px}
+  .gallery-item.video-thumb img{opacity:0.7}
+  .gallery-empty{text-align:center;color:#555;font-size:1rem;padding:3rem;border:1px dashed rgba(255,69,0,0.15);border-radius:8px;margin-top:2rem}
+
+  /* EXTRA VIDEOS SECTION */
+  .videos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:1.5rem;margin-top:2rem}
+  .video-embed{border-radius:8px;overflow:hidden;border:1px solid rgba(255,69,0,0.2);box-shadow:0 0 20px rgba(255,69,0,0.1)}
+  .video-embed-inner{position:relative;padding-bottom:56.25%;height:0}
+  .video-embed-inner iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
+
+  /* CONTACT */
+  .contact-content{text-align:center;margin-top:2rem}
+  .contact-content p{font-size:1.2rem;color:#999;font-weight:300;margin-bottom:2rem}
+  .contact-links{display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap}
+  .contact-link{color:var(--light);text-decoration:none;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;font-size:0.9rem;padding:0.8rem 2rem;border:1px solid rgba(255,69,0,0.3);border-radius:4px;transition:all 0.3s}
+  .contact-link:hover{background:var(--fire);border-color:var(--fire);color:#fff}
+  .contact-link.primary{background:var(--fire);border-color:var(--fire);color:#fff}
+  .contact-link.primary:hover{background:var(--ember)}
+  .filmka-badge{margin-top:3rem;padding:1.5rem 2.5rem;border:1px solid rgba(255,179,71,0.2);border-radius:6px;display:inline-block;background:rgba(255,69,0,0.04)}
+  .filmka-badge .label{font-size:0.75rem;letter-spacing:0.2em;text-transform:uppercase;color:#666}
+  .filmka-badge .name{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--gold);letter-spacing:0.1em;margin-top:0.2rem}
+  .filmka-badge .since{font-size:0.8rem;color:#888;margin-top:0.2rem}
+
+  /* ADMIN MODAL */
+  .modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:500;justify-content:center;align-items:center}
+  .modal-overlay.open{display:flex}
+  .modal{background:var(--smoke);border:1px solid rgba(255,69,0,0.3);border-radius:8px;padding:2.5rem;width:90%;max-width:500px;position:relative}
+  .modal-close{position:absolute;top:1rem;right:1.2rem;background:none;border:none;color:#888;font-size:1.5rem;cursor:pointer;transition:color 0.3s}
+  .modal-close:hover{color:var(--fire)}
+  .modal h2{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--fire);margin-bottom:1.5rem}
+  .form-group{margin-bottom:1.2rem}
+  .form-group label{display:block;font-size:0.8rem;letter-spacing:0.15em;text-transform:uppercase;color:#888;margin-bottom:0.4rem}
+  .form-group input,.form-group textarea{width:100%;padding:0.7rem 1rem;background:var(--dark);border:1px solid rgba(255,69,0,0.2);border-radius:4px;color:var(--light);font-family:'Barlow Condensed',sans-serif;font-size:1rem;transition:border-color 0.3s}
+  .form-group input:focus,.form-group textarea:focus{outline:none;border-color:var(--fire)}
+  .form-btn{width:100%;padding:0.8rem;background:var(--fire);color:#fff;border:none;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1rem;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:background 0.3s}
+  .form-btn:hover{background:var(--ember)}
+  .form-error{color:#ff4444;font-size:0.85rem;margin-top:0.5rem;display:none}
+
+  /* ADMIN PANEL */
+  .admin-panel{display:none;background:rgba(255,69,0,0.03);border:1px solid rgba(255,69,0,0.2);border-radius:8px;padding:2rem;margin-top:2rem}
+  .admin-panel.open{display:block}
+  .admin-panel h3{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--gold);margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem}
+  .admin-section{margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid rgba(255,69,0,0.1)}
+  .admin-section:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+  .admin-section h4{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--ember);margin-bottom:0.8rem;letter-spacing:0.05em}
+  .add-row{display:flex;gap:0.5rem;margin-top:0.5rem}
+  .add-row input{flex:1;padding:0.5rem 0.8rem;background:var(--dark);border:1px solid rgba(255,69,0,0.2);border-radius:4px;color:var(--light);font-family:'Barlow Condensed',sans-serif;font-size:0.95rem}
+  .add-row input:focus{outline:none;border-color:var(--fire)}
+  .add-btn{display:inline-flex;align-items:center;gap:0.3rem;background:transparent;border:1px solid var(--fire);color:var(--fire);padding:0.5rem 1rem;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:0.85rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.3s}
+  .add-btn:hover{background:var(--fire);color:#fff}
+  .admin-item{display:flex;align-items:center;gap:0.8rem;margin:0.5rem 0;padding:0.5rem 0.8rem;background:rgba(0,0,0,0.3);border-radius:4px;border:1px solid rgba(255,69,0,0.08)}
+  .admin-item img{width:60px;height:45px;object-fit:cover;border-radius:3px}
+  .admin-item .info{flex:1;font-size:0.9rem;color:#aaa;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .admin-item .remove{background:none;border:none;color:#ff4444;font-size:1.1rem;cursor:pointer;padding:0.3rem;opacity:0.6;transition:opacity 0.3s}
+  .admin-item .remove:hover{opacity:1}
+  .save-msg{color:var(--gold);font-size:0.9rem;text-align:center;margin-top:1rem;display:none}
+
+  footer{text-align:center;padding:3rem;border-top:1px solid rgba(255,69,0,0.1);color:#555;font-size:0.85rem;letter-spacing:0.1em}
+
+  @media(max-width:768px){
+    nav{padding:0.8rem 1.2rem}.nav-links{display:none}.nav-right>.lang-switcher,.nav-right>.nav-admin{display:none}.hamburger{display:block}
+    section{padding:3.5rem 1.2rem}.about-grid{grid-template-columns:1fr;gap:2rem}.stats-grid{grid-template-columns:1fr 1fr;gap:1rem}
+    .film-grid{grid-template-columns:1fr}.filmography-section{padding:3.5rem 1.2rem}
+    .gallery-grid{grid-template-columns:1fr 1fr}.videos-grid{grid-template-columns:1fr}
+    .contact-links{flex-direction:column;align-items:center}.contact-link{width:80%;text-align:center}
+    .hero-badges{gap:0.6rem;padding:0 1rem}.hero-badge{font-size:0.65rem;padding:0.3rem 0.8rem}
+    .modal{padding:1.8rem;width:95%}
+  }
+  @media(max-width:420px){.hero-title{font-size:3.2rem}.hero-name{font-size:1.2rem;letter-spacing:0.15em}.section-title{font-size:2rem}.gallery-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="fixed-bg"></div>
+<div class="fixed-bg-overlay"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo" onclick="window.scrollTo({top:0,behavior:'smooth'})">⚡ ŠIMBERSKÝ</div>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="#about"><span data-lang-en>About</span><span data-lang-cs>O mně</span></a></li>
+      <li><a href="#filmography"><span data-lang-en>Filmography</span><span data-lang-cs>Filmografie</span></a></li>
+      <li><a href="#showreel">Showreel</a></li>
+      <li><a href="#gallery"><span data-lang-en>Gallery</span><span data-lang-cs>Galerie</span></a></li>
+      <li><a href="#contact"><span data-lang-en>Contact</span><span data-lang-cs>Kontakt</span></a></li>
+    </ul>
+    <div class="lang-switcher">
+      <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
+      <div class="lang-divider"></div>
+      <button class="lang-btn" id="btn-cs" onclick="setLang('cs')">CZ</button>
+    </div>
+    <button class="nav-admin" id="navAdminBtn" onclick="toggleAdmin()">⚙ Admin</button>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-overlay" id="mobileMenu">
+  <a href="#about" onclick="closeMenu()"><span data-lang-en>About</span><span data-lang-cs>O mně</span></a>
+  <a href="#filmography" onclick="closeMenu()"><span data-lang-en>Filmography</span><span data-lang-cs>Filmografie</span></a>
+  <a href="#showreel" onclick="closeMenu()">Showreel</a>
+  <a href="#gallery" onclick="closeMenu()"><span data-lang-en>Gallery</span><span data-lang-cs>Galerie</span></a>
+  <a href="#contact" onclick="closeMenu()"><span data-lang-en>Contact</span><span data-lang-cs>Kontakt</span></a>
+  <a onclick="closeMenu();toggleAdmin()">⚙ Admin</a>
+  <div style="display:flex;border:1px solid rgba(255,69,0,0.3);border-radius:4px;overflow:hidden;margin-top:1rem;">
+    <button class="lang-btn active" id="btn-en-m" onclick="setLang('en')">EN</button>
+    <div class="lang-divider"></div>
+    <button class="lang-btn" id="btn-cs-m" onclick="setLang('cs')">CZ</button>
+  </div>
+</div>
+
+<!-- ADMIN LOGIN MODAL -->
+<div class="modal-overlay" id="adminLoginModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeAdminLogin()">&times;</button>
+    <h2>⚙ ADMIN</h2>
+    <div class="form-group">
+      <label><span data-lang-en>Password</span><span data-lang-cs>Heslo</span></label>
+      <input type="password" id="adminPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doAdminLogin()">
+    </div>
+    <div class="form-error" id="adminError"></div>
+    <button class="form-btn" onclick="doAdminLogin()"><span data-lang-en>Sign In</span><span data-lang-cs>Přihlásit</span></button>
+    <p style="margin-top:1rem;font-size:0.8rem;color:#555;text-align:center;">
+      <span data-lang-en>Default password: <strong style="color:#888">admin</strong> (change it!)</span>
+      <span data-lang-cs>Výchozí heslo: <strong style="color:#888">admin</strong> (změň si ho!)</span>
+    </p>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="sparks" id="sparks"></div>
+  <div class="hero-name">MAREK ŠIMBERSKÝ</div>
+  <h1 class="hero-title">STUNT<br>PERFORMER</h1>
+  <p class="hero-subtitle"><span data-lang-en>Stunt Performer · Actor · Filmka Stunt Team</span><span data-lang-cs>Kaskadér · Herec · Filmka Stunt Team</span></p>
+  <div class="hero-badges">
+    <span class="hero-badge">Tenet</span>
+    <span class="hero-badge">Spider-Man: Far From Home</span>
+    <span class="hero-badge">All Quiet on the Western Front</span>
+    <span class="hero-badge">Anthropoid</span>
+  </div>
+  <div class="scroll-hint"><span data-lang-en>Scroll down</span><span data-lang-cs>Scroll dolů</span></div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <h2 class="section-title"><span data-lang-en>ABOUT ME</span><span data-lang-cs>O MNĚ</span></h2>
+  <div class="about-grid">
+    <div class="about-text">
+      <div class="bl" data-lang-en>Professional stunt performer and actor based in <strong>Prague, Czech Republic</strong>, and a proud member of the legendary <strong>Filmka Stunt Team</strong> — the oldest stunt team in the Czech Republic, active since 1962.<br><br>I specialize in fight choreography, high falls, and action sequences for international film and television productions. My credits include Hollywood blockbusters such as Christopher Nolan's <strong>Tenet</strong>, Marvel's <strong>Spider-Man: Far From Home</strong>, and the Oscar®-winning <strong>All Quiet on the Western Front</strong>, where I also portrayed the role of Gérard Duval.<br><br>With over <strong>30 credits</strong> on IMDb spanning stunt work and acting, I am an active member of the Czech stunt elite with a strong international presence.</div>
+      <div class="bl" data-lang-cs>Profesionální kaskadér a herec původem z <strong>Prahy</strong>, člen legendárního <strong>Filmka Stunt Team</strong> — nejstaršího kaskadérského týmu v České republice, působícího od roku 1962.<br><br>Specializuji se na bojové choreografie, pády z výšek a akční sekvence pro mezinárodní filmové a televizní produkce. Pracoval jsem na hollywoodských blockbusterech jako <strong>Tenet</strong> Christophera Nolana, marvelovka <strong>Spider-Man: Far From Home</strong> nebo oscarový <strong>Na západní frontě klid</strong>, kde jsem ztvárnil i hereckou roli Gérarda Duvala.<br><br>S přes <strong>30 kredity</strong> na IMDb pokrývajícími kaskadérství i herectví patřím mezi aktivní členy české kaskadérské špičky s přesahem do mezinárodních produkcí.</div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-number">32+</div><div class="stat-label"><span data-lang-en>Stunt Credits</span><span data-lang-cs>Stunt kreditů</span></div></div>
+      <div class="stat-card"><div class="stat-number">10+</div><div class="stat-label"><span data-lang-en>Years in the Industry</span><span data-lang-cs>Let v branži</span></div></div>
+      <div class="stat-card"><div class="stat-number">2</div><div class="stat-label"><span data-lang-en>Acting Roles</span><span data-lang-cs>Herecké role</span></div></div>
+      <div class="stat-card"><div class="stat-number">🌍</div><div class="stat-label"><span data-lang-en>Hollywood & Europe</span><span data-lang-cs>Hollywood & Evropa</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FILMOGRAPHY -->
+<section class="filmography-section" id="filmography">
+  <div class="inner">
+    <h2 class="section-title"><span data-lang-en>FILMOGRAPHY</span><span data-lang-cs>FILMOGRAFIE</span></h2>
+    <div class="film-category-label"><span data-lang-en>⭐ Upcoming Projects</span><span data-lang-cs>⭐ Nadcházející projekty</span></div>
+    <div class="film-grid">
+      <div class="film-card film-highlight" data-film="emperor"><div class="film-info"><h3>Emperor</h3><div class="film-role">Stunts · Post-production</div></div><div class="film-year">2026</div></div>
+      <div class="film-card film-highlight" data-film="wheel-of-time"><div class="film-info"><h3>The Wheel of Time</h3><div class="film-role">Stunt Performer · TV Series</div></div><div class="film-year">2025</div></div>
+    </div>
+    <div class="film-category-label"><span data-lang-en>🎬 Major Stunt Credits</span><span data-lang-cs>🎬 Hlavní kaskadérské kredity</span></div>
+    <div class="film-grid">
+      <div class="film-card" data-film="spaceman"><div class="film-info"><h3>Spaceman</h3><div class="film-role">Stunts</div></div><div class="film-year">2024</div></div>
+      <div class="film-card film-highlight" data-film="all-quiet"><div class="film-info"><h3>All Quiet on the Western Front</h3><div class="film-role"><span data-lang-en>Actor (Gérard Duval) + Stunts · Oscar®</span><span data-lang-cs>Herec (Gérard Duval) + Stunts · Oscar®</span></div></div><div class="film-year">2022</div></div>
+      <div class="film-card" data-film="medieval"><div class="film-info"><h3>Medieval</h3><div class="film-role">Stunt Performer</div></div><div class="film-year">2022</div></div>
+      <div class="film-card" data-film="blood-red-sky"><div class="film-info"><h3>Blood Red Sky</h3><div class="film-role">Stunts</div></div><div class="film-year">2021</div></div>
+      <div class="film-card film-highlight" data-film="tenet"><div class="film-info"><h3>Tenet</h3><div class="film-role">Stunts · Christopher Nolan</div></div><div class="film-year">2020</div></div>
+      <div class="film-card film-highlight" data-film="spider-man"><div class="film-info"><h3>Spider-Man: Far From Home</h3><div class="film-role">Stunts (Prague) · Marvel / MCU</div></div><div class="film-year">2019</div></div>
+      <div class="film-card" data-film="jojo-rabbit"><div class="film-info"><h3>Jojo Rabbit</h3><div class="film-role">Stunts · Taika Waititi</div></div><div class="film-year">2019</div></div>
+      <div class="film-card" data-film="painted-bird"><div class="film-info"><h3>The Painted Bird</h3><div class="film-role">Stunts</div></div><div class="film-year">2019</div></div>
+      <div class="film-card" data-film="catcher-spy"><div class="film-info"><h3>The Catcher Was a Spy</h3><div class="film-role">Stunt Player</div></div><div class="film-year">2018</div></div>
+      <div class="film-card" data-film="egon-schiele"><div class="film-info"><h3>Egon Schiele: Death and the Maiden</h3><div class="film-role">Stunt Performer</div></div><div class="film-year">2016</div></div>
+      <div class="film-card film-highlight" data-film="anthropoid"><div class="film-info"><h3>Anthropoid</h3><div class="film-role">Stunts</div></div><div class="film-year">2016</div></div>
+      <div class="film-card" data-film="child-44"><div class="film-info"><h3>Child 44</h3><div class="film-role"><span data-lang-en>Stunt Performer · Ridley Scott (producer)</span><span data-lang-cs>Stunt Performer · Ridley Scott (producent)</span></div></div><div class="film-year">2015</div></div>
+      <div class="film-card" data-film="last-knights"><div class="film-info"><h3>Last Knights</h3><div class="film-role">Stunt Performer</div></div><div class="film-year">2015</div></div>
+    </div>
+    <div class="film-category-label"><span data-lang-en>📺 Television</span><span data-lang-cs>📺 Televizní projekty</span></div>
+    <div class="film-grid">
+      <div class="film-card" data-film="crossing-lines"><div class="film-info"><h3>Crossing Lines</h3><div class="film-role">Stunts · TV Series</div></div><div class="film-year">TV</div></div>
+      <div class="film-card" data-film="polda"><div class="film-info"><h3>Polda</h3><div class="film-role"><span data-lang-en>Actor (František Starek) · TV Series</span><span data-lang-cs>Herec (František Starek) · TV Series</span></div></div><div class="film-year">2017</div></div>
+    </div>
+    <p style="text-align:center;margin-top:2.5rem;color:#555;font-size:0.9rem;letter-spacing:0.1em;">
+      <span data-lang-en>+ more projects · Full filmography on</span><span data-lang-cs>+ další projekty · Kompletní filmografie na</span>
+      <a href="https://www.imdb.com/name/nm5259074/" target="_blank" style="color:var(--gold);text-decoration:none;border-bottom:1px solid var(--gold);">IMDb</a>
+      <span data-lang-en> and </span><span data-lang-cs> a </span>
+      <a href="https://www.fdb.cz/lidi/662963-marek-simbersky.html" target="_blank" style="color:var(--gold);text-decoration:none;border-bottom:1px solid var(--gold);">FDb.cz</a>
+    </p>
+  </div>
+</section>
+
+<!-- SHOWREEL -->
+<section id="showreel">
+  <h2 class="section-title">SHOWREEL</h2>
+  <div class="showreel-video">
+    <div class="showreel-video-inner">
+      <iframe src="https://www.youtube.com/embed/tR4FGgyCfdk?rel=0&modestbranding=1" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+  <p style="text-align:center;margin-top:1rem;color:#666;font-size:0.9rem;letter-spacing:0.1em;">
+    <span data-lang-en>▶ Full Stunt Showreel — Watch on</span><span data-lang-cs>▶ Kompletní kaskadérský showreel — Sleduj na</span>
+    <a href="https://youtu.be/tR4FGgyCfdk" target="_blank" style="color:var(--gold);text-decoration:none;border-bottom:1px solid var(--gold);">YouTube</a>
+  </p>
+  <!-- Extra videos from admin -->
+  <div id="extraVideos"></div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <h2 class="section-title"><span data-lang-en>📸 GALLERY</span><span data-lang-cs>📸 GALERIE</span></h2>
+  <div id="galleryContainer"></div>
+
+  <!-- ADMIN PANEL (inline, visible only when logged in) -->
+  <div class="admin-panel" id="adminPanel">
+    <h3>⚙ <span data-lang-en>ADMIN PANEL</span><span data-lang-cs>ADMIN PANEL</span></h3>
+
+    <div class="admin-section">
+      <h4><span data-lang-en>📸 Photos</span><span data-lang-cs>📸 Fotky</span></h4>
+      <p style="color:#888;font-size:0.9rem;margin-bottom:0.5rem;">
+        <span data-lang-en>Photos are loaded automatically from the <strong style="color:var(--gold)">Media/</strong> folder in your GitHub repository. Just upload images there and they'll appear in the gallery.</span>
+        <span data-lang-cs>Fotky se načítají automaticky ze složky <strong style="color:var(--gold)">Media/</strong> v GitHub repozitáři. Stačí tam nahrát obrázky a automaticky se zobrazí v galerii.</span>
+      </p>
+      <p style="font-size:0.8rem;color:#555;">
+        <span data-lang-en>Currently loaded: <strong id="photoCount" style="color:var(--gold)">0</strong> photos</span>
+        <span data-lang-cs>Aktuálně načteno: <strong id="photoCount2" style="color:var(--gold)">0</strong> fotek</span>
+      </p>
+      <button class="add-btn" onclick="loadGalleryFromRepo();showMsg(currentLang==='cs'?'✓ Galerie obnovena!':'✓ Gallery refreshed!')" style="margin-top:0.5rem;">↻ <span data-lang-en>Refresh Gallery</span><span data-lang-cs>Obnovit galerii</span></button>
+    </div>
+
+    <div class="admin-section">
+      <h4><span data-lang-en>🎬 Extra YouTube Videos</span><span data-lang-cs>🎬 Další YouTube videa</span></h4>
+      <div id="adminVideos"></div>
+      <div class="add-row">
+        <input type="text" id="newVideoUrl" placeholder="https://youtu.be/...">
+        <button class="add-btn" onclick="addVideo()">+ <span data-lang-en>Add</span><span data-lang-cs>Přidat</span></button>
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <h4><span data-lang-en>🔒 Change Password</span><span data-lang-cs>🔒 Změnit heslo</span></h4>
+      <div class="add-row">
+        <input type="password" id="newAdminPass" placeholder="New password...">
+        <button class="add-btn" onclick="changePassword()"><span data-lang-en>Change</span><span data-lang-cs>Změnit</span></button>
+      </div>
+    </div>
+
+    <button class="form-btn" onclick="logoutAdmin()" style="background:transparent;border:1px solid #555;color:#888;margin-top:1rem;">
+      <span data-lang-en>🚪 Sign Out</span><span data-lang-cs>🚪 Odhlásit se</span>
+    </button>
+    <div class="save-msg" id="saveMsg"></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <h2 class="section-title"><span data-lang-en>CONTACT</span><span data-lang-cs>KONTAKT</span></h2>
+  <div class="contact-content">
+    <p><span data-lang-en>Looking for a professional stunt performer for your project?<br>Get in touch — let's make it happen.</span><span data-lang-cs>Hledáte profesionálního kaskadéra pro svůj projekt?<br>Ozvěte se — ať to rozjedeme.</span></p>
+    <div class="contact-links">
+      <a href="https://www.imdb.com/name/nm5259074/" target="_blank" class="contact-link primary"><span data-lang-en>IMDb Profile</span><span data-lang-cs>IMDb profil</span></a>
+      <a href="https://www.filmka.cz/en/clenove/simbersky-marek/" target="_blank" class="contact-link"><span data-lang-en>Filmka Profile</span><span data-lang-cs>Filmka profil</span></a>
+      <a href="https://www.fdb.cz/lidi/662963-marek-simbersky.html" target="_blank" class="contact-link">FDb.cz</a>
+    </div>
+    <div class="filmka-badge">
+      <div class="label"><span data-lang-en>Member of</span><span data-lang-cs>Člen</span></div>
+      <div class="name">FILMKA STUNT TEAM</div>
+      <div class="since"><span data-lang-en>The oldest stunt team in Czech Republic · Since 1962</span><span data-lang-cs>Nejstarší kaskadérský tým v ČR · Od roku 1962</span></div>
+    </div>
+  </div>
+</section>
+
+<footer>© 2026 Marek Šimberský — Stunt Performer & Actor · Filmka Stunt Team</footer>
+
+<script>
+// === LANGUAGE ===
+let currentLang='en';
+function setLang(l){currentLang=l;document.documentElement.lang=l;if(l==='cs')document.body.classList.add('lang-cs');else document.body.classList.remove('lang-cs');['btn-en','btn-cs','btn-en-m','btn-cs-m'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.toggle('active',id.includes(l==='cs'?'cs':'en'))});document.title=l==='cs'?'MAREK ŠIMBERSKÝ — Kaskadér & Herec':'MAREK ŠIMBERSKÝ — Stunt Performer & Actor';}
+
+// === HAMBURGER ===
+function toggleMenu(){document.getElementById('hamburger').classList.toggle('open');document.getElementById('mobileMenu').classList.toggle('open');document.body.style.overflow=document.getElementById('mobileMenu').classList.contains('open')?'hidden':'';}
+function closeMenu(){document.getElementById('hamburger').classList.remove('open');document.getElementById('mobileMenu').classList.remove('open');document.body.style.overflow='';}
+
+// === SPARKS ===
+const sparksEl=document.getElementById('sparks');for(let i=0;i<30;i++){const s=document.createElement('div');s.className='spark';s.style.left=Math.random()*100+'%';s.style.animationDuration=(3+Math.random()*5)+'s';s.style.animationDelay=Math.random()*5+'s';s.style.width=s.style.height=(2+Math.random()*3)+'px';sparksEl.appendChild(s);}
+
+// === DATA (localStorage) ===
+function getData(){try{return JSON.parse(localStorage.getItem('ms_data')||'{"photos":[],"videos":[]}')}catch(e){return{photos:[],videos:[]}}}
+function saveData(d){localStorage.setItem('ms_data',JSON.stringify(d));render();}
+function getPass(){return localStorage.getItem('ms_admin_pass')||'admin';}
+
+// === ADMIN ===
+let isAdmin=false;
+
+function toggleAdmin(){
+  if(isAdmin){document.getElementById('gallery').scrollIntoView({behavior:'smooth'});return;}
+  document.getElementById('adminLoginModal').classList.add('open');
+  setTimeout(()=>document.getElementById('adminPass').focus(),100);
+}
+function closeAdminLogin(){document.getElementById('adminLoginModal').classList.remove('open');document.getElementById('adminError').style.display='none';}
+function doAdminLogin(){
+  const p=document.getElementById('adminPass').value;
+  if(p===getPass()){isAdmin=true;closeAdminLogin();document.getElementById('adminPanel').classList.add('open');document.getElementById('navAdminBtn').classList.add('active');document.getElementById('adminPass').value='';renderAdmin();document.getElementById('gallery').scrollIntoView({behavior:'smooth'});}
+  else{const e=document.getElementById('adminError');e.textContent=currentLang==='cs'?'Špatné heslo.':'Wrong password.';e.style.display='block';}
+}
+function logoutAdmin(){isAdmin=false;document.getElementById('adminPanel').classList.remove('open');document.getElementById('navAdminBtn').classList.remove('active');}
+function changePassword(){const p=document.getElementById('newAdminPass').value;if(p.length<4){showMsg(currentLang==='cs'?'Min. 4 znaky':'Min. 4 characters');return;}localStorage.setItem('ms_admin_pass',p);document.getElementById('newAdminPass').value='';showMsg(currentLang==='cs'?'✓ Heslo změněno!':'✓ Password changed!');}
+function showMsg(t){const m=document.getElementById('saveMsg');m.textContent=t;m.style.display='block';setTimeout(()=>m.style.display='none',3000);}
+
+function addPhoto(){const u=document.getElementById('newPhotoUrl').value.trim();if(!u)return;const d=getData();d.photos.push(u);saveData(d);document.getElementById('newPhotoUrl').value='';showMsg(currentLang==='cs'?'✓ Fotka přidána!':'✓ Photo added!');}
+function removePhoto(i){const d=getData();d.photos.splice(i,1);saveData(d);}
+function addVideo(){const u=document.getElementById('newVideoUrl').value.trim();if(!u)return;const d=getData();d.videos.push(u);saveData(d);document.getElementById('newVideoUrl').value='';showMsg(currentLang==='cs'?'✓ Video přidáno!':'✓ Video added!');}
+function removeVideo(i){const d=getData();d.videos.splice(i,1);saveData(d);}
+
+function getYtId(u){const m=u.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&\n?#]+)/);return m?m[1]:null;}
+
+function renderAdmin(){
+  const d=getData();
+  let vi='';d.videos.forEach((u,i)=>{vi+=`<div class="admin-item"><div style="width:60px;height:45px;background:var(--steel);border-radius:3px;display:flex;align-items:center;justify-content:center;color:var(--fire);font-size:1.2rem">▶</div><div class="info">${u}</div><button class="remove" onclick="removeVideo(${i})">✕</button></div>`;});
+  document.getElementById('adminVideos').innerHTML=vi;
+}
+
+// === GALLERY: Auto-load from Media/ folder ===
+let galleryPhotos = [];
+let filmPhotos = {}; // map: data-film slug -> image URL
+
+async function loadGalleryFromRepo() {
+  const gc = document.getElementById('galleryContainer');
+  gc.innerHTML = `<div class="gallery-empty" style="border:none;"><span data-lang-en>Loading gallery...</span><span data-lang-cs>Načítám galerii...</span></div>`;
+  if(currentLang==='cs') document.body.classList.add('lang-cs');
+
+  try {
+    const resp = await fetch('https://api.github.com/repos/xxMarsim/msimbersky/contents/Media');
+    if(!resp.ok) throw new Error('API fail');
+    const files = await resp.json();
+    const imageFiles = files.filter(f => /\.(jpg|jpeg|png|gif|webp)$/i.test(f.name));
+
+    galleryPhotos = imageFiles.map(f => ({ name: f.name, url: f.download_url }));
+
+    // Match photos to films by filename
+    // e.g. "tenet.jpg" matches data-film="tenet"
+    // e.g. "spider-man.jpg" matches data-film="spider-man"
+    // e.g. "all-quiet-2.jpg" matches data-film="all-quiet" (with number suffix)
+    filmPhotos = {};
+    imageFiles.forEach(f => {
+      const baseName = f.name.replace(/\.(jpg|jpeg|png|gif|webp)$/i, '').toLowerCase();
+      // Remove trailing numbers (e.g. "tenet-2" -> "tenet", "tenet2" -> "tenet")
+      const slug = baseName.replace(/[-_]?\d+$/, '');
+      // Also try exact match first
+      if(!filmPhotos[baseName]) filmPhotos[baseName] = [];
+      filmPhotos[baseName].push(f.download_url);
+      if(slug !== baseName) {
+        if(!filmPhotos[slug]) filmPhotos[slug] = [];
+        filmPhotos[slug].push(f.download_url);
+      }
+    });
+
+    assignFilmPhotos();
+  } catch(e) {
+    galleryPhotos = [];
+    filmPhotos = {};
+  }
+
+  renderGallery();
+}
+
+function assignFilmPhotos() {
+  document.querySelectorAll('.film-card[data-film]').forEach(card => {
+    const slug = card.getAttribute('data-film');
+    const photos = filmPhotos[slug];
+    if(photos && photos.length > 0) {
+      // Use first matching photo as hover background
+      card.classList.add('has-photo');
+      card.style.setProperty('--film-bg', `url('${photos[0]}')`);
+      // Set the ::before background via inline style workaround
+      const img = new Image();
+      img.src = photos[0];
+      img.onload = () => {
+        card.style.cssText += `--film-bg-url:url('${photos[0]}')`;
+      };
+    }
+  });
+
+  // Inject dynamic CSS for each card with photo
+  let styleEl = document.getElementById('filmPhotoStyles');
+  if(!styleEl) {
+    styleEl = document.createElement('style');
+    styleEl.id = 'filmPhotoStyles';
+    document.head.appendChild(styleEl);
+  }
+  let css = '';
+  document.querySelectorAll('.film-card[data-film].has-photo').forEach(card => {
+    const slug = card.getAttribute('data-film');
+    const photos = filmPhotos[slug];
+    if(photos && photos[0]) {
+      css += `.film-card[data-film="${slug}"]::before{background-image:url('${photos[0]}')}\n`;
+    }
+  });
+  styleEl.textContent = css;
+}
+
+function renderGallery() {
+  const gc = document.getElementById('galleryContainer');
+  const d = getData();
+
+  // Combine repo photos + manually added photos from admin
+  const allPhotos = [...galleryPhotos.map(p => p.url), ...d.photos];
+
+  if(allPhotos.length === 0) {
+    gc.innerHTML = `<div class="gallery-empty">
+      <span data-lang-en>No photos yet. Add images to the <strong>Media/</strong> folder in your GitHub repository and they'll appear here automatically!</span>
+      <span data-lang-cs>Zatím žádné fotky. Přidej obrázky do složky <strong>Media/</strong> v GitHub repozitáři a automaticky se tu zobrazí!</span>
+    </div>`;
+    if(currentLang==='cs') document.body.classList.add('lang-cs');
+    return;
+  }
+
+  let h = '<div class="gallery-grid">';
+  allPhotos.forEach((url, i) => {
+    h += `<div class="gallery-item" onclick="openLightbox(${i})"><img src="${url}" loading="lazy" onerror="this.parentElement.style.display='none'"></div>`;
+  });
+  h += '</div>';
+  gc.innerHTML = h;
+
+  // Update admin counter
+  const pc = document.getElementById('photoCount');
+  const pc2 = document.getElementById('photoCount2');
+  if(pc) pc.textContent = allPhotos.length;
+  if(pc2) pc2.textContent = allPhotos.length;
+
+  // Store for lightbox
+  window._galleryUrls = allPhotos;
+}
+
+// === LIGHTBOX ===
+function openLightbox(i) {
+  const urls = window._galleryUrls || [];
+  if(!urls.length) return;
+  let current = i;
+
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.95);z-index:600;display:flex;align-items:center;justify-content:center;cursor:pointer;';
+
+  const img = document.createElement('img');
+  img.src = urls[current];
+  img.style.cssText = 'max-width:90%;max-height:85vh;object-fit:contain;border-radius:6px;box-shadow:0 0 60px rgba(255,69,0,0.3);';
+
+  const counter = document.createElement('div');
+  counter.style.cssText = 'position:absolute;bottom:2rem;color:#888;font-size:0.9rem;letter-spacing:0.15em;';
+  const updateCounter = () => counter.textContent = `${current+1} / ${urls.length}`;
+  updateCounter();
+
+  const closeBtn = document.createElement('div');
+  closeBtn.innerHTML = '✕';
+  closeBtn.style.cssText = 'position:absolute;top:1.5rem;right:2rem;color:#888;font-size:2rem;cursor:pointer;transition:color 0.3s;z-index:610;';
+  closeBtn.onmouseenter = () => closeBtn.style.color='#fff';
+  closeBtn.onmouseleave = () => closeBtn.style.color='#888';
+
+  const navLeft = document.createElement('div');
+  navLeft.innerHTML = '‹';
+  navLeft.style.cssText = 'position:absolute;left:1.5rem;top:50%;transform:translateY(-50%);color:#888;font-size:3rem;cursor:pointer;transition:color 0.3s;padding:1rem;z-index:610;';
+  navLeft.onmouseenter = () => navLeft.style.color='var(--gold)';
+  navLeft.onmouseleave = () => navLeft.style.color='#888';
+
+  const navRight = document.createElement('div');
+  navRight.innerHTML = '›';
+  navRight.style.cssText = 'position:absolute;right:1.5rem;top:50%;transform:translateY(-50%);color:#888;font-size:3rem;cursor:pointer;transition:color 0.3s;padding:1rem;z-index:610;';
+  navRight.onmouseenter = () => navRight.style.color='var(--gold)';
+  navRight.onmouseleave = () => navRight.style.color='#888';
+
+  const navigate = (dir) => {
+    current = (current + dir + urls.length) % urls.length;
+    img.src = urls[current]; updateCounter();
+  };
+
+  navLeft.onclick = (e) => { e.stopPropagation(); navigate(-1); };
+  navRight.onclick = (e) => { e.stopPropagation(); navigate(1); };
+  closeBtn.onclick = () => { document.body.removeChild(overlay); document.body.style.overflow=''; };
+  overlay.onclick = (e) => { if(e.target===overlay){document.body.removeChild(overlay);document.body.style.overflow='';} };
+
+  const keyHandler = (e) => {
+    if(e.key==='Escape'){document.body.removeChild(overlay);document.body.style.overflow='';document.removeEventListener('keydown',keyHandler);}
+    if(e.key==='ArrowLeft') navigate(-1);
+    if(e.key==='ArrowRight') navigate(1);
+  };
+  document.addEventListener('keydown', keyHandler);
+
+  overlay.appendChild(img);
+  overlay.appendChild(counter);
+  overlay.appendChild(closeBtn);
+  if(urls.length > 1) { overlay.appendChild(navLeft); overlay.appendChild(navRight); }
+  document.body.appendChild(overlay);
+  document.body.style.overflow='hidden';
+}
+
+function render(){
+  const d=getData();
+
+  // Extra videos
+  const vc=document.getElementById('extraVideos');
+  if(d.videos.length>0){let h='<div class="videos-grid" style="margin-top:3rem;">';d.videos.forEach(u=>{const id=getYtId(u);if(id){h+=`<div class="video-embed"><div class="video-embed-inner"><iframe src="https://www.youtube.com/embed/${id}?rel=0&modestbranding=1" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe></div></div>`;}});h+='</div>';vc.innerHTML=h;}
+  else{vc.innerHTML='';}
+
+  renderGallery();
+  if(isAdmin)renderAdmin();
+}
+
+// === INIT ===
+loadGalleryFromRepo();
+render();
+</script>
+</body>
+</html>
